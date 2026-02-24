@@ -4,245 +4,7 @@
     <title>Библиотека - тестовый UI</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
-            font-weight: 500;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        h2 {
-            color: #555;
-            margin: 20px 0 15px;
-            font-weight: 400;
-            font-size: 1.5rem;
-        }
-
-        /* Форма */
-        #bookForm {
-            background: #f8f9ff;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            flex: 1 1 200px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: 500;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e1e5f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-            margin-right: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button[type="button"] {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
-        }
-
-        /* Таблица */
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            margin-top: 20px;
-        }
-
-        th {
-            text-align: left;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 500;
-            border-radius: 10px 10px 0 0;
-        }
-
-        td {
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        }
-
-        tr td:first-child {
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
-
-        tr td:last-child {
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
-
-        /* Кнопки действий в таблице */
-        td button {
-            padding: 8px 16px;
-            margin: 0 5px 0 0;
-            font-size: 0.9rem;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            box-shadow: 0 4px 10px rgba(67, 233, 123, 0.3);
-        }
-
-        td button:last-child {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            box-shadow: 0 4px 10px rgba(250, 112, 154, 0.3);
-        }
-
-        /* Ошибки */
-        .error {
-            background: #ff6b6b;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-
-            #bookForm {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-group {
-                width: 100%;
-            }
-
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            thead {
-                display: none;
-            }
-
-            tr {
-                margin-bottom: 15px;
-                background: white;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            }
-
-            td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px 15px;
-                border: none;
-                border-bottom: 1px solid #eee;
-                border-radius: 0;
-                box-shadow: none;
-            }
-
-            td:last-child {
-                border-bottom: none;
-            }
-
-            td::before {
-                content: attr(data-label);
-                font-weight: 500;
-                color: #667eea;
-                width: 30%;
-            }
-
-            td button {
-                margin: 0;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -289,12 +51,10 @@
     <script>
         const apiBase = '/books';  // базовый URL API
 
-        // Загрузка всех книг при загрузке страницы
         window.onload = function() {
             loadBooks();
         };
 
-        // Функция загрузки книг с сервера
         function loadBooks() {
             fetch(apiBase)
                 .then(response => response.json())
@@ -335,7 +95,6 @@
                 .catch(error => showError('Ошибка загрузки книг: ' + error));
         }
 
-        // Обработка отправки формы (создание или обновление)
         document.getElementById('bookForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const id = document.getElementById('bookId').value;
@@ -346,7 +105,6 @@
             };
 
             if (id) {
-                // PUT запрос для обновления
                 fetch(apiBase + '/' + id, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -364,7 +122,6 @@
                 })
                 .catch(error => showError(error.message));
             } else {
-                // POST запрос для создания
                 fetch(apiBase, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -384,7 +141,6 @@
             }
         });
 
-        // Функция редактирования книги: загружаем данные в форму
         function editBook(id) {
             fetch(apiBase + '/' + id)
                 .then(response => {
@@ -402,13 +158,12 @@
                 .catch(error => showError(error.message));
         }
 
-        // Функция удаления книги
         function deleteBook(id) {
             if (!confirm('Удалить книгу?')) return;
             fetch(apiBase + '/' + id, { method: 'DELETE' })
                 .then(response => {
                     if (response.status === 204) {
-                        loadBooks();  // перезагружаем список
+                        loadBooks();
                     } else {
                         return response.json().then(err => { throw new Error(err.error || 'Ошибка удаления'); });
                     }
@@ -416,16 +171,13 @@
                 .catch(error => showError(error.message));
         }
 
-        // Сброс формы (очистка и скрытие ID)
         function resetForm() {
             document.getElementById('bookId').value = '';
             document.getElementById('bookForm').reset();
         }
 
-        // Обработка кнопки "Отмена"
         document.getElementById('cancelEdit').addEventListener('click', resetForm);
 
-        // Отображение ошибок
         function showError(message) {
             const errorDiv = document.getElementById('error');
             errorDiv.textContent = message;
