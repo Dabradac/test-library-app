@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}О проекте{% endblock %}
+
+{% block content %}
+    <h1>О проекте</h1>
+    <p>Этот сервис создан для обучения тестированию REST API.</p>
+    <p>Здесь вы можете попробовать различные HTTP-методы и посмотреть, как фронтенд взаимодействует с бэкендом.</p>
+
+    <h2>Доступные эндпоинты API</h2>
+    <ul>
+        <li><code>GET /books</code> – получить список всех книг</li>
+        <li><code>GET /books/&lt;id&gt;</code> – получить книгу по ID</li>
+        <li><code>POST /books</code> – создать новую книгу (JSON с полями title, author, year)</li>
+        <li><code>PUT /books/&lt;id&gt;</code> – полностью обновить книгу</li>
+        <li><code>PATCH /books/&lt;id&gt;</code> – частично обновить книгу</li>
+        <li><code>DELETE /books/&lt;id&gt;</code> – удалить книгу</li>
+        <li><code>GET /books/stats</code> – статистика (общее количество, уникальные авторы, средний год)</li>
+        <li><code>GET /books/search?q=...</code> – поиск по названию или автору</li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Библиотека{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <ul class="nav-menu">
+                <li><a href="{{ url_for('ui') }}">Главная</a></li>
+                <li><a href="{{ url_for('ui_search') }}">Поиск</a></li>
+                <li><a href="{{ url_for('ui_stats') }}">Статистика</a></li>
+                <li><a href="{{ url_for('ui_about') }}">О проекте</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        // Глобальная функция для отображения ошибок (можно переопределить)
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                setTimeout(() => errorDiv.textContent = '', 5000);
+            } else {
+                alert(message);
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

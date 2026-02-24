@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск книг{% endblock %}
+
+{% block content %}
+    <h1>Поиск книг</h1>
+    <form id="searchForm">
+        <div class="form-group">
+            <label for="query">Поиск (по названию или автору):</label>
+            <input type="text" id="query" name="query" placeholder="Введите текст...">
+        </div>
+        <button type="submit">Искать</button>
+    </form>
+
+    <div id="results"></div>
+    <div id="error" class="error"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const query = document.getElementById('query').value.trim();
+        if (!query) {
+            showError('Введите поисковый запрос');
+            return;
+        }
+
+        fetch('/books/search?q=' + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                const resultsDiv = document.getElementById('results');
+                if (data.length === 0) {
+                    resultsDiv.innerHTML = '<p>Ничего не найдено</p>';
+                } else {
+                    let html = '<h2>Результаты:</h2><ul>';
+                    data.forEach(book => {
+                        html += `<li>${book.title} – ${book.author} (${book.year})</li>`;
+                    });
+                    html += '</ul>';
+                    resultsDiv.innerHTML = html;
+                }
+            })
+            .catch(error => showError('Ошибка поиска: ' + error));
+    });
+</script>
+{% endblock %}

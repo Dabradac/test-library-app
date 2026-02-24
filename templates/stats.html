@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+    <h1>Статистика по книгам</h1>
+    <div id="stats">
+        <p>Загрузка...</p>
+    </div>
+    <div id="error" class="error"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    fetch('/books/stats')
+        .then(response => response.json())
+        .then(stats => {
+            const statsDiv = document.getElementById('stats');
+            statsDiv.innerHTML = `
+                <p><strong>Всего книг:</strong> ${stats.total}</p>
+                <p><strong>Уникальных авторов:</strong> ${stats.unique_authors}</p>
+                <p><strong>Средний год издания:</strong> ${stats.avg_year}</p>
+            `;
+        })
+        .catch(error => {
+            showError('Ошибка загрузки статистики: ' + error);
+            document.getElementById('stats').innerHTML = '<p>Не удалось загрузить статистику</p>';
+        });
+</script>
+{% endblock %}

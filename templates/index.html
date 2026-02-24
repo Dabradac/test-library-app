@@ -1,188 +1,177 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Библиотека - тестовый UI</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Управление книгами</h1>
+{% extends "base.html" %}
 
-        <h2>Добавить / редактировать книгу</h2>
-        <form id="bookForm">
-            <input type="hidden" id="bookId" value="">
-            <div class="form-group">
-                <label for="title">Название:</label>
-                <input type="text" id="title" required>
-            </div>
-            <div class="form-group">
-                <label for="author">Автор:</label>
-                <input type="text" id="author" required>
-            </div>
-            <div class="form-group">
-                <label for="year">Год:</label>
-                <input type="number" id="year" required>
-            </div>
-            <div>
-                <button type="submit">Сохранить</button>
-                <button type="button" id="cancelEdit">Отмена</button>
-            </div>
-        </form>
+{% block title %}Управление книгами{% endblock %}
 
-        <h2>Список книг</h2>
-        <table id="booksTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Название</th>
-                    <th>Автор</th>
-                    <th>Год</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody id="booksList"></tbody>
-        </table>
+{% block content %}
+    <h1>Управление книгами</h1>
 
-        <div id="error" class="error"></div>
-    </div>
+    <h2>Добавить / редактировать книгу</h2>
+    <form id="bookForm">
+        <input type="hidden" id="bookId" value="">
+        <div class="form-group">
+            <label for="title">Название:</label>
+            <input type="text" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="author">Автор:</label>
+            <input type="text" id="author" required>
+        </div>
+        <div class="form-group">
+            <label for="year">Год:</label>
+            <input type="number" id="year" required>
+        </div>
+        <div>
+            <button type="submit">Сохранить</button>
+            <button type="button" id="cancelEdit">Отмена</button>
+        </div>
+    </form>
 
-    <script>
-        const apiBase = '/books';  // базовый URL API
+    <h2>Список книг</h2>
+    <table id="booksTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Автор</th>
+                <th>Год</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody id="booksList"></tbody>
+    </table>
 
-        window.onload = function() {
-            loadBooks();
+    <div id="error" class="error"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const apiBase = '/books';
+
+    window.onload = function() {
+        loadBooks();
+    };
+
+    function loadBooks() {
+        fetch(apiBase)
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('booksList');
+                tbody.innerHTML = '';
+                data.forEach(book => {
+                    const row = tbody.insertRow();
+                    
+                    const idCell = row.insertCell();
+                    idCell.textContent = book.id;
+                    idCell.setAttribute('data-label', 'ID');
+                    
+                    const titleCell = row.insertCell();
+                    titleCell.textContent = book.title;
+                    titleCell.setAttribute('data-label', 'Название');
+                    
+                    const authorCell = row.insertCell();
+                    authorCell.textContent = book.author;
+                    authorCell.setAttribute('data-label', 'Автор');
+                    
+                    const yearCell = row.insertCell();
+                    yearCell.textContent = book.year;
+                    yearCell.setAttribute('data-label', 'Год');
+                    
+                    const actionsCell = row.insertCell();
+                    actionsCell.setAttribute('data-label', 'Действия');
+                    const editBtn = document.createElement('button');
+                    editBtn.textContent = 'Редактировать';
+                    editBtn.onclick = () => editBook(book.id);
+                    actionsCell.appendChild(editBtn);
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = 'Удалить';
+                    deleteBtn.onclick = () => deleteBook(book.id);
+                    actionsCell.appendChild(deleteBtn);
+                });
+            })
+            .catch(error => showError('Ошибка загрузки книг: ' + error));
+    }
+
+    document.getElementById('bookForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const id = document.getElementById('bookId').value;
+        const bookData = {
+            title: document.getElementById('title').value,
+            author: document.getElementById('author').value,
+            year: parseInt(document.getElementById('year').value)
         };
 
-        function loadBooks() {
-            fetch(apiBase)
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById('booksList');
-                    tbody.innerHTML = '';
-                    data.forEach(book => {
-                        const row = tbody.insertRow();
-                        
-                        const idCell = row.insertCell();
-                        idCell.textContent = book.id;
-                        idCell.setAttribute('data-label', 'ID');
-                        
-                        const titleCell = row.insertCell();
-                        titleCell.textContent = book.title;
-                        titleCell.setAttribute('data-label', 'Название');
-                        
-                        const authorCell = row.insertCell();
-                        authorCell.textContent = book.author;
-                        authorCell.setAttribute('data-label', 'Автор');
-                        
-                        const yearCell = row.insertCell();
-                        yearCell.textContent = book.year;
-                        yearCell.setAttribute('data-label', 'Год');
-                        
-                        const actionsCell = row.insertCell();
-                        actionsCell.setAttribute('data-label', 'Действия');
-                        const editBtn = document.createElement('button');
-                        editBtn.textContent = 'Редактировать';
-                        editBtn.onclick = () => editBook(book.id);
-                        actionsCell.appendChild(editBtn);
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.textContent = 'Удалить';
-                        deleteBtn.onclick = () => deleteBook(book.id);
-                        actionsCell.appendChild(deleteBtn);
-                    });
-                })
-                .catch(error => showError('Ошибка загрузки книг: ' + error));
+        if (id) {
+            fetch(apiBase + '/' + id, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Ошибка обновления'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                resetForm();
+                loadBooks();
+            })
+            .catch(error => showError(error.message));
+        } else {
+            fetch(apiBase, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Ошибка создания'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                resetForm();
+                loadBooks();
+            })
+            .catch(error => showError(error.message));
         }
+    });
 
-        document.getElementById('bookForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const id = document.getElementById('bookId').value;
-            const bookData = {
-                title: document.getElementById('title').value,
-                author: document.getElementById('author').value,
-                year: parseInt(document.getElementById('year').value)
-            };
+    function editBook(id) {
+        fetch(apiBase + '/' + id)
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Книга не найдена'); });
+                }
+                return response.json();
+            })
+            .then(book => {
+                document.getElementById('bookId').value = book.id;
+                document.getElementById('title').value = book.title;
+                document.getElementById('author').value = book.author;
+                document.getElementById('year').value = book.year;
+            })
+            .catch(error => showError(error.message));
+    }
 
-            if (id) {
-                fetch(apiBase + '/' + id, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bookData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.error || 'Ошибка обновления'); });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    resetForm();
+    function deleteBook(id) {
+        if (!confirm('Удалить книгу?')) return;
+        fetch(apiBase + '/' + id, { method: 'DELETE' })
+            .then(response => {
+                if (response.status === 204) {
                     loadBooks();
-                })
-                .catch(error => showError(error.message));
-            } else {
-                fetch(apiBase, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(bookData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.error || 'Ошибка создания'); });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    resetForm();
-                    loadBooks();
-                })
-                .catch(error => showError(error.message));
-            }
-        });
+                } else {
+                    return response.json().then(err => { throw new Error(err.error || 'Ошибка удаления'); });
+                }
+            })
+            .catch(error => showError(error.message));
+    }
 
-        function editBook(id) {
-            fetch(apiBase + '/' + id)
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.error || 'Книга не найдена'); });
-                    }
-                    return response.json();
-                })
-                .then(book => {
-                    document.getElementById('bookId').value = book.id;
-                    document.getElementById('title').value = book.title;
-                    document.getElementById('author').value = book.author;
-                    document.getElementById('year').value = book.year;
-                })
-                .catch(error => showError(error.message));
-        }
+    function resetForm() {
+        document.getElementById('bookId').value = '';
+        document.getElementById('bookForm').reset();
+    }
 
-        function deleteBook(id) {
-            if (!confirm('Удалить книгу?')) return;
-            fetch(apiBase + '/' + id, { method: 'DELETE' })
-                .then(response => {
-                    if (response.status === 204) {
-                        loadBooks();
-                    } else {
-                        return response.json().then(err => { throw new Error(err.error || 'Ошибка удаления'); });
-                    }
-                })
-                .catch(error => showError(error.message));
-        }
-
-        function resetForm() {
-            document.getElementById('bookId').value = '';
-            document.getElementById('bookForm').reset();
-        }
-
-        document.getElementById('cancelEdit').addEventListener('click', resetForm);
-
-        function showError(message) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = message;
-            setTimeout(() => errorDiv.textContent = '', 5000);
-        }
-    </script>
-</body>
-</html>
+    document.getElementById('cancelEdit').addEventListener('click', resetForm);
+</script>
+{% endblock %}
